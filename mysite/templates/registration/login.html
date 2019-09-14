@@ -1,0 +1,43 @@
+{% extends  'base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% endblock %}
+{% block title %}Ticket Login - Company Co.{% endblock %}
+
+{% block main %}
+{% if user.is_authenticated %}
+<meta http-equiv="REFRESH" content="0;url=/home">
+{% else %}
+<header id="header">
+  <div class="inner">
+    <a href="{% url 'index' %}" class="logo"><strong>Tickets</strong> by Company</a>
+  </div>
+</header>
+<form method="post" class="form-signin">
+<img src="{% static 'img/logo.png' %}" style="width:50%;margin-bottom: 32px;" class="logod" alt="company logo">
+  <h1 class="h3 mb-3 font-weight-normal">Please Login here :</h1>
+  {% csrf_token %}
+  <div class="card shadow-sm lgin">
+      <div class="card-header">
+      {{  form.username.label_tag }}
+      </div>
+      <div class="card-body">
+                {{ form.username }}
+    	</div>
+  </div>
+  <div class="card shadow-sm lgin">
+      <div class="card-header">
+      {{  form.password.label_tag }}
+      </div>
+      <div class="card-body">
+                {{ form.password }}
+      </div>
+  </div>
+  
+  <button type="submit" class="btn btn-primary btn-block logbtn">Log in</button>
+</form>
+{% endif %}
+{% endblock %}

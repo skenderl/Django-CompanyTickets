@@ -1,0 +1,264 @@
+<!-- HEADER DESKTOP-->
+<header class="header-desktop3 d-none d-lg-block">
+    <div class="section__content section__content--p35">
+        <div class="header3-wrap">
+            <div class="header__logo">
+                <a href="/">
+                    <img src="{% static 'img/home.png' %}" alt="Company" />
+                </a>
+            </div>
+            <div class="header__navbar">
+                <ul class="list-unstyled">
+                  <li>
+                      <a href="{% url 'home' %}">
+                          <i class="fas fa-home"></i>
+                          <span class="bot-line"></span>Home</a>
+                  </li>
+                    <li>
+                        <a href="{% url 'newticket' %}">
+                            <i class="fas fa-plus"></i>
+                            <span class="bot-line"></span>New Ticket</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'resolved' %}">
+                            <i class="fas fa-archive"></i>
+                            <span class="bot-line"></span>Resolved Tickets</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'for_tickets' %}">
+                            <i class="fas fa-trophy"></i>
+                            <span class="bot-line"></span>Assigned Tickets</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'my_tickets' %}">
+                            <i class="fas fa-history"></i>
+                            <span class="bot-line"></span>Created Ticket</a>
+                    </li>
+                    {% if user.is_superuser %}
+                    <li class="has-sub">
+                        <a href="#">
+                            <i class="fas fa-user-secret"></i>
+                            <span class="bot-line"></span>Admin Only</a>
+                        <ul class="header3-sub-list list-unstyled">
+                            <li>
+                                <a href="{% url 'newdepartement' %}">Add Department</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'signup' %}">Add User</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'all_tickets' %}">All Tickets</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'all_users' %}">Users List</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'deleted_users' %}">Deleted Users</a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="header__tool">
+                <div class="header-button-item has-noti js-item-menu">
+                    <i class="zmdi zmdi-notifications"></i>
+                    <div class="notifi-dropdown notifi-dropdown--no-bor js-dropdown">
+                        <div class="notifi__title">
+                            <p>You have {{mytickets.count}} Notifications</p>
+                        </div>
+                        {% for ticket in mytickets %}
+                        <div class="notifi__item">
+                            <div class="bg-c{% if now < ticket.dlimit %}3{% else %}2{% endif %} img-cir img-40">
+                                <i class="zmdi zmdi-{% if ticket.type|upper == 'NETWORK'  %}network-alert{% elif ticket.type|upper == 'EQUIPMENT' %}devices{% elif ticket.type|upper == 'PERSONNAL' %}face{% else %}alert-circle{% endif %}"></i>
+                            </div>
+                            <div class="content">
+                                <p>{{ ticket.title|truncatechars:30 }}</p>
+                                <span class="date">{{ ticket.date_created }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="header-button-item js-item-menu">
+                    <i class="zmdi zmdi-settings"></i>
+                    <div class="setting-dropdown js-dropdown">
+                        <div class="account-dropdown__body">
+                            <div class="account-dropdown__item">
+                                <a href="{% url 'change_password' %}">
+                                    <i class="zmdi zmdi-settings"></i>Change Password</a>
+                            </div>
+                            <div class="account-dropdown__item">
+                                <a href="{% url 'change_email' %}">
+                                    <i class="zmdi zmdi-settings"></i>Change Email</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="account-wrap">
+                    <div class="account-item account-item--style2 clearfix js-item-menu">
+                        <div class="image">
+                            <img src="{% static 'img/userlogo.jpg' %}" alt="{{ user.first_name }} {{ user.last_name }}" />
+                        </div>
+                        <div class="content">
+                            <a class="js-acc-btn" href="#">{{ user.first_name }} {{ user.last_name }}</a>
+                        </div>
+                        <div class="account-dropdown js-dropdown">
+                            <div class="info clearfix">
+                                <div class="image">
+                                    <a href="#">
+                                        <img src="{% static 'img/userlogo.jpg' %}" alt="{{ user.first_name }} {{ user.last_name }}" />
+                                    </a>
+                                </div>
+                                <div class="content">
+                                    <h5 class="name">
+                                        <a href="">{{ user.username }}</a>
+                                    </h5>
+                                    <span class="email">{{ user.email }}</span>
+                                </div>
+                            </div>
+                            <div class="account-dropdown__body">
+                                <div class="account-dropdown__item">
+                                    <a href="">
+                                        <i class="zmdi zmdi-account"></i>Department : {{ user.departement }}</a>
+                                </div>
+                                <div class="account-dropdown__item">
+                                    <a href="">
+                                        <i class="zmdi zmdi-account"></i>Login : {{ user.last_login }}</a>
+                                </div>
+                            </div>
+                            <div class="account-dropdown__footer">
+                                <a href="{% url 'logout' %}">
+                                    <i class="zmdi zmdi-power"></i>Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- END HEADER DESKTOP-->
+
+<!-- HEADER MOBILE-->
+<header class="header-mobile header-mobile-2 d-block d-lg-none">
+    <div class="header-mobile__bar">
+        <div class="container-fluid">
+            <div class="header-mobile-inner">
+                <a class="logo" href="index.html">
+                    <img src="{% static 'img/home.png' %}" alt="Company" />
+                </a>
+                <button class="hamburger hamburger--slider" type="button">
+                    <span class="hamburger-box">
+                        <span class="hamburger-inner"></span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar-mobile">
+        <div class="container-fluid">
+            <ul class="navbar-mobile__list list-unstyled">
+                <li>
+                    <a href="chart.html">
+                        <i class="fas fa-chart-bar"></i>Charts</a>
+                </li>
+                {% if user.is_superuser %}
+                <li class="has-sub">
+                    <a class="js-arrow" href="#">
+                        <i class="fas fa-copy"></i>Admin Only</a>
+                    <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                        <li>
+                            <a href="{% url 'newdepartement' %}">Add Department</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'signup' %}">Add User</a>
+                        </li>
+                        <li>
+                            <a href="forget-pass.html">Users List</a>
+                        </li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</header>
+<div class="sub-header-mobile-2 d-block d-lg-none">
+    <div class="header__tool">
+        <div class="header-button-item has-noti js-item-menu">
+            <i class="zmdi zmdi-notifications"></i>
+            <div class="notifi-dropdown notifi-dropdown--no-bor js-dropdown">
+                <div class="notifi__title">
+                    <p>You have {{mytickets.count}} Notifications</p>
+                </div>
+                {% for ticket in mytickets %}
+                <div class="notifi__item">
+                    <div class="bg-c{% if now < ticket.dlimit %}3{% else %}2{% endif %} img-cir img-40">
+                        <i class="zmdi zmdi-{% if ticket.type|upper == 'NETWORK'  %}network-alert{% elif ticket.type|upper == 'EQUIPMENT' %}devices{% elif ticket.type|upper == 'PERSONNAL' %}face{% else %}alert-circle{% endif %}"></i>
+                    </div>
+                    <div class="content">
+                        <p>{{ ticket.title|truncatechars:30 }}</p>
+                        <span class="date">{{ ticket.date_created }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="header-button-item js-item-menu">
+            <i class="zmdi zmdi-settings"></i>
+            <div class="setting-dropdown js-dropdown">
+                <div class="account-dropdown__body">
+                    <div class="account-dropdown__item">
+                        <a href="{% url 'change_password' %}">
+                            <i class="zmdi zmdi-settings"></i>Change Password</a>
+                    </div>
+                    <div class="account-dropdown__item">
+                        <a href="{% url 'change_email' %}">
+                            <i class="zmdi zmdi-settings"></i>Change Email</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="account-wrap">
+            <div class="account-item account-item--style2 clearfix js-item-menu">
+                <div class="image">
+                    <img src="{% static 'img/userlogo.jpg' %}" alt="{{ user.first_name }} {{ user.last_name }}" />
+                </div>
+                <div class="content">
+                    <a class="js-acc-btn" href="#">{{ user.first_name }} {{ user.last_name }}</a>
+                </div>
+                <div class="account-dropdown js-dropdown">
+                    <div class="info clearfix">
+                        <div class="image">
+                            <a href="#">
+                                <img src="{% static 'img/userlogo.jpg' %}" alt="{{ user.first_name }} {{ user.last_name }}" />
+                            </a>
+                        </div>
+                        <div class="content">
+                            <h5 class="name">
+                                <a href="#">{{ user.username }}</a>
+                            </h5>
+                            <span class="email">{{ user.email }}</span>
+                        </div>
+                    </div>
+                    <div class="account-dropdown__body">
+                        <div class="account-dropdown__item">
+                            <a href="">
+                                <i class="zmdi zmdi-account"></i>Department : {{ user.departement }}</a>
+                        </div>
+                        <div class="account-dropdown__item">
+                            <a href="">
+                                <i class="zmdi zmdi-settings"></i>Login : {{ user.last_login }}</a>
+                        </div>
+                    </div>
+                    <div class="account-dropdown__footer">
+                        <a href="{% url 'logout' %}">
+                            <i class="zmdi zmdi-power"></i>Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END HEADER MOBILE -->

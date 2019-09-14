@@ -1,0 +1,482 @@
+{% extends 'base.html' %}
+{% load static %}
+{% if user.is_authenticated %}
+{% block head %}
+{% block bootstrap %}{% endblock %}
+    <!-- Required meta tags-->
+    <meta http-equiv="refresh" content="60">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="{% static 'home/css/font-face.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'home/vendor/font-awesome-4.7/css/font-awesome.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'home/vendor/font-awesome-5/css/fontawesome-all.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'home/vendor/mdi-font/css/material-design-iconic-font.min.css' %}" rel="stylesheet" media="all">
+
+    <!-- Bootstrap CSS-->
+    <link href="{% static 'home/vendor/bootstrap-4.1/bootstrap.min.css' %}" rel="stylesheet" media="all">
+
+    <!-- Vendor CSS-->
+    <link href="{% static 'home/vendor/animsition/animsition.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'home/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'home/vendor/wow/animate.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'home/vendor/css-hamburgers/hamburgers.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'home/vendor/slick/slick.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'home/vendor/select2/select2.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'home/vendor/perfect-scrollbar/perfect-scrollbar.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'css/pop.css' %}" rel="stylesheet" media="all">
+    <!-- Main CSS-->
+    <link href="{% static 'home/css/theme.css' %}" rel="stylesheet" media="all">
+
+{% endblock %}
+{% block title %}Home - Company Co.{% endblock %}
+{% block main %}
+
+<body class="animsition">
+    <div class="page-wrapper">
+        <!-- HEADER DESKTOP-->
+        <header class="header-desktop3 d-none d-lg-block">
+            <div class="section__content section__content--p35">
+                <div class="header3-wrap">
+                    <div class="header__logo">
+                        <a href="/">
+                            <img src="{% static 'img/home.png' %}" alt="Company" />
+                        </a>
+                    </div>
+                    <div class="header__navbar">
+                        <ul class="list-unstyled">
+                          <li>
+                              <a href="{% url 'home' %}">
+                                  <i class="fas fa-home"></i>
+                                  <span class="bot-line"></span>Home</a>
+                          </li>
+                            <li>
+                                <a href="{% url 'newticket' %}">
+                                    <i class="fas fa-plus"></i>
+                                    <span class="bot-line"></span>New Ticket</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'resolved' %}">
+                                    <i class="fas fa-archive"></i>
+                                    <span class="bot-line"></span>Resolved Tickets</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'for_tickets' %}">
+                                    <i class="fas fa-trophy"></i>
+                                    <span class="bot-line"></span>Assigned Tickets</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'my_tickets' %}">
+                                    <i class="fas fa-history"></i>
+                                    <span class="bot-line"></span>Created Ticket</a>
+                            </li>
+                            {% if user.is_superuser %}
+                            <li class="has-sub">
+                                <a href="#">
+                                    <i class="fas fa-user-secret"></i>
+                                    <span class="bot-line"></span>Admin Only</a>
+                                <ul class="header3-sub-list list-unstyled">
+                                    <li>
+                                        <a href="{% url 'newdepartement' %}">Add Department</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'signup' %}">Add User</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'all_tickets' %}">All Tickets</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'all_users' %}">Users List</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'deleted_users' %}">Deleted Users</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <div class="header__tool">
+                        <div class="header-button-item has-noti js-item-menu">
+                            <i class="zmdi zmdi-notifications"></i>
+                            <div class="notifi-dropdown notifi-dropdown--no-bor js-dropdown">
+                                <div class="notifi__title">
+                                    <p>You have {{mytickets.count}} Notifications</p>
+                                </div>
+                                {% for ticket in mytickets %}
+                                <div class="notifi__item">
+                                    <div class="bg-c{% if now < ticket.dlimit %}3{% else %}2{% endif %} img-cir img-40">
+                                        <i class="zmdi zmdi-{% if ticket.type|upper == 'NETWORK'  %}network-alert{% elif ticket.type|upper == 'EQUIPMENT' %}devices{% elif ticket.type|upper == 'PERSONNAL' %}face{% else %}alert-circle{% endif %}"></i>
+                                    </div>
+                                    <div class="content">
+                                        <p>{{ ticket.title|truncatechars:30 }}</p>
+                                        <span class="date">{{ ticket.date_created }}</span>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="header-button-item js-item-menu">
+                            <i class="zmdi zmdi-settings"></i>
+                            <div class="setting-dropdown js-dropdown">
+                                <div class="account-dropdown__body">
+                                    <div class="account-dropdown__item">
+                                        <a href="{% url 'change_password' %}">
+                                            <i class="zmdi zmdi-settings"></i>Change Password</a>
+                                    </div>
+                                    <div class="account-dropdown__item">
+                                        <a href="{% url 'change_email' %}">
+                                            <i class="zmdi zmdi-settings"></i>Change Email</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="account-wrap">
+                            <div class="account-item account-item--style2 clearfix js-item-menu">
+                                <div class="image">
+                                    <img src="{% static 'img/userlogo.jpg' %}" alt="{{ user.first_name }} {{ user.last_name }}" />
+                                </div>
+                                <div class="content">
+                                    <a class="js-acc-btn" href="#">{{ user.first_name }} {{ user.last_name }}</a>
+                                </div>
+                                <div class="account-dropdown js-dropdown">
+                                    <div class="info clearfix">
+                                        <div class="image">
+                                            <a href="#">
+                                                <img src="{% static 'img/userlogo.jpg' %}" alt="{{ user.first_name }} {{ user.last_name }}" />
+                                            </a>
+                                        </div>
+                                        <div class="content">
+                                            <h5 class="name">
+                                                <a href="">{{ user.username }}</a>
+                                            </h5>
+                                            <span class="email">{{ user.email }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="account-dropdown__body">
+                                        <div class="account-dropdown__item">
+                                            <a href="">
+                                                <i class="zmdi zmdi-account"></i>Department : {{ user.departement }}</a>
+                                        </div>
+                                        <div class="account-dropdown__item">
+                                            <a href="">
+                                                <i class="zmdi zmdi-account"></i>Login : {{ user.last_login }}</a>
+                                        </div>
+                                    </div>
+                                    <div class="account-dropdown__footer">
+                                        <a href="{% url 'logout' %}">
+                                            <i class="zmdi zmdi-power"></i>Logout</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- END HEADER DESKTOP-->
+
+        <!-- HEADER MOBILE-->
+        <header class="header-mobile header-mobile-2 d-block d-lg-none">
+            <div class="header-mobile__bar">
+                <div class="container-fluid">
+                    <div class="header-mobile-inner">
+                        <a class="logo" href="index.html">
+                            <img src="{% static 'img/home.png' %}" alt="Company" />
+                        </a>
+                        <button class="hamburger hamburger--slider" type="button">
+                            <span class="hamburger-box">
+                                <span class="hamburger-inner"></span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <nav class="navbar-mobile">
+                <div class="container-fluid">
+                    <ul class="navbar-mobile__list list-unstyled">
+                        <li>
+                            <a href="chart.html">
+                                <i class="fas fa-chart-bar"></i>Charts</a>
+                        </li>
+                        {% if user.is_superuser %}
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#">
+                                <i class="fas fa-copy"></i>Admin Only</a>
+                            <ul class="navbar-mobile-sub__list list-unstyled js-sub-list">
+                                <li>
+                                    <a href="{% url 'newdepartement' %}">Add Department</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'signup' %}">Add User</a>
+                                </li>
+                                <li>
+                                    <a href="forget-pass.html">Users List</a>
+                                </li>
+                            </ul>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div class="sub-header-mobile-2 d-block d-lg-none">
+            <div class="header__tool">
+                <div class="header-button-item has-noti js-item-menu">
+                    <i class="zmdi zmdi-notifications"></i>
+                    <div class="notifi-dropdown notifi-dropdown--no-bor js-dropdown">
+                        <div class="notifi__title">
+                            <p>You have {{mytickets.count}} Notifications</p>
+                        </div>
+                        {% for ticket in mytickets %}
+                        <div class="notifi__item">
+                            <div class="bg-c{% if now < ticket.dlimit %}3{% else %}2{% endif %} img-cir img-40">
+                                <i class="zmdi zmdi-{% if ticket.type|upper == 'NETWORK'  %}network-alert{% elif ticket.type|upper == 'EQUIPMENT' %}devices{% elif ticket.type|upper == 'PERSONNAL' %}face{% else %}alert-circle{% endif %}"></i>
+                            </div>
+                            <div class="content">
+                                <p>{{ ticket.title|truncatechars:30 }}</p>
+                                <span class="date">{{ ticket.date_created }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="header-button-item js-item-menu">
+                    <i class="zmdi zmdi-settings"></i>
+                    <div class="setting-dropdown js-dropdown">
+                        <div class="account-dropdown__body">
+                            <div class="account-dropdown__item">
+                                <a href="{% url 'change_password' %}">
+                                    <i class="zmdi zmdi-settings"></i>Change Password</a>
+                            </div>
+                            <div class="account-dropdown__item">
+                                <a href="{% url 'change_email' %}">
+                                    <i class="zmdi zmdi-settings"></i>Change Email</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="account-wrap">
+                    <div class="account-item account-item--style2 clearfix js-item-menu">
+                        <div class="image">
+                            <img src="{% static 'img/userlogo.jpg' %}" alt="{{ user.first_name }} {{ user.last_name }}" />
+                        </div>
+                        <div class="content">
+                            <a class="js-acc-btn" href="#">{{ user.first_name }} {{ user.last_name }}</a>
+                        </div>
+                        <div class="account-dropdown js-dropdown">
+                            <div class="info clearfix">
+                                <div class="image">
+                                    <a href="#">
+                                        <img src="{% static 'img/userlogo.jpg' %}" alt="{{ user.first_name }} {{ user.last_name }}" />
+                                    </a>
+                                </div>
+                                <div class="content">
+                                    <h5 class="name">
+                                        <a href="#">{{ user.username }}</a>
+                                    </h5>
+                                    <span class="email">{{ user.email }}</span>
+                                </div>
+                            </div>
+                            <div class="account-dropdown__body">
+                                <div class="account-dropdown__item">
+                                    <a href="">
+                                        <i class="zmdi zmdi-account"></i>Department : {{ user.departement }}</a>
+                                </div>
+                                <div class="account-dropdown__item">
+                                    <a href="">
+                                        <i class="zmdi zmdi-settings"></i>Login : {{ user.last_login }}</a>
+                                </div>
+                            </div>
+                            <div class="account-dropdown__footer">
+                                <a href="{% url 'logout' %}">
+                                    <i class="zmdi zmdi-power"></i>Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END HEADER MOBILE -->
+
+        <!-- PAGE CONTENT-->
+        <div class="page-content--bgf7">
+            <!-- WELCOME-->
+            <section class="welcome p-t-10">
+              <br>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="title-4">{{user.departement}} Department
+                                <span>Tickets: </span>
+                            </h1>
+                            <hr class="line-seprate">
+                        </div>
+                    </div>
+                </div>
+                <br>
+            </section>
+            <!-- END WELCOME-->
+            <!-- MAIN-->
+            <div id="maintiks" style="max-width:90%;margin:auto;">
+
+            {% for ticket in tickets %}
+                                        <!-- The Modal -->
+                                        <div id="modal{{ticket.id}}" class="modal">
+
+                                          <!-- Modal content -->
+                                          <div class=".col-md-6 .offset-md-3 modal-content" >
+                                            <div class="modal-header">
+                                              <span class="close" onclick="mySpan({{ticket.id}})">&times;</span>
+                                            </div>
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="mx-auto d-block">
+                                                        <h5 class="text-sm-center mt-2 mb-1">{{ticket.title}}</h5>
+                                                        <div class="location text-sm-center">Ticket ID: {{ticket.id}}</div>
+                                                    </div>
+                                                    <hr>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <strong class="card-title mb-3">Assigned User : <p class="tikinf">{{ticket.assigned|default:"No One"}}</p></strong>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <strong class="card-title mt-3">Creator : <p class="tikinf">{{ticket.creator}}</p></strong>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <strong class="card-title mb-3">Assigned Department : <p class="tikinf">{{ticket.departement}}</p></strong>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <strong class="card-title mb-3">Concerned Equipment : <p class="tikinf">{{ticket.materiel}}</p></strong>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <strong class="card-title mb-3"><p class="tikinf">{{ticket.content}}</p></strong>
+                                                </div>
+                                                {% if user.id == ticket.creator.id %}
+                                                <div class="card-footer" style="padding:1% 20%;">
+                                                  <button style="float:left;" onclick="location.href='/deleteTicket/{{ticket.id}}/home'" name="button" class="btn btn-outline-danger btn-lg active"
+                                                    value="{{ticket.id}}" type="submit">DELETE Ticket  <i class="zmdi zmdi-delete"></i>
+                                                  </button>
+                                                  <button style="float:right;" onclick="location.href='/ticket/edit/{{ticket.id}}'" name="button" class="btn btn-outline-danger btn-lg active"
+                                                   value="{{ticket.id}}" type="submit">EDIT Ticket  <i class="zmdi zmdi-settings"></i>
+                                                  </button>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="modal-footer">
+                                            </div>
+                                        </div>
+
+                                        </div>
+            {% endfor %}
+                                        <div class="col-lg-9" style="flex: 0 0 100% !important;max-width: 100% !important;">
+                                            <div class="table-responsive table--no-card m-b-30">
+                                                <table class="table table-borderless table-striped table-earning">
+                                                    <thead>
+                                                        <tr>
+                                                          <form method="POST">{% csrf_token %}
+                                                            <th><button name="ordr" type="submit" style="color:white;" value="-id">Ticket ID {% if sel == '-id' %}<i style="color:red;" class="fa fa-arrow-down"></i>{% elif sel == '-id1' %}<i style="color:red;" class="fa fa-arrow-up"></i>{% endif %}</button></th>
+                                                            <th><button name="ordr" type="submit" style="color:white;" value="-type">Type {% if sel == '-type' %}<i style="color:red;" class="fa fa-arrow-down"></i>{% elif sel == '-type1' %}<i style="color:red;" class="fa fa-arrow-up"></i>{% endif %}</button></th>
+                                                            <th><button name="ordr" type="submit" style="color:white;" value="-date_created">Date Created {% if sel == '-date_created' %}<i style="color:red;" class="fa fa-arrow-down"></i>{% elif sel == '-date_created1' %}<i style="color:red;" class="fa fa-arrow-up"></i>{% endif %}</button></th>
+                                                            <th>Date Limit</th>
+                                                            <th><button name="ordr" type="submit" style="color:white;" value="-status">Status {% if sel == '-status' %}<i style="color:red;" class="fa fa-arrow-down"></i>{% elif sel == '-status1' %}<i style="color:red;" class="fa fa-arrow-up"></i>{% endif %}</button></th>
+                                                            <th><button name="ordr" type="submit" style="color:white;" value="-title">Title {% if sel == '-title' %}<i style="color:red;" class="fa fa-arrow-down"></i>{% elif sel == '-title1' %}<i style="color:red;" class="fa fa-arrow-up"></i>{% endif %}</button></th>
+                                                            <th>Info.</th>
+                                                          </form>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                      {% for ticket in tickets %}
+                                                        <tr>
+                                                            <td>{{ticket.id}}</td>
+                                                            <td>{{ticket.type}}</td>
+                                                            <td>{{ticket.date_created}}</td>
+                                                            <td style="{% if now < ticket.dlimit %}color:#00FF00;{% else %}color:#FF0000;{% endif %}">{{ticket.dlimit}}</td>
+                                                            <td style="{% if ticket.status == 0 %}color:#FF0000;{% else %}color:#00FF00;{% endif %}">
+                                                              <form action="/changeStatus/{{ticket.id}}/home" method="POST">
+                                                                  {% csrf_token %}
+                                                                  <button name="button" class="{% if ticket.status == 0 %}btn btn-outline-danger btn-lg active{% else %}btn btn-outline-success btn-lg active{% endif %}"
+                                                                   value="{{ticket.id}}" type="submit">{% if ticket.status == 0 %}Pending{% else %}Resolved <i class="fa fa-check"></i>{% endif %}</button>
+                                                              </form>
+                                                            </td>
+                                                            <td>{{ ticket.title|truncatechars:30 }}</td>
+                                                            <td>
+                                                              <button type="button" onclick="myBtn({{ticket.id}})" class="btn btn-primary mb-1" id="btn{{ticket.id}}">See More</button>
+                                                            </td>
+                                                        </tr>
+                                                      {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div>
+                                            {% if tickets.has_other_pages %}
+                                            <nav aria-label="Page navigation example">
+                                              <ul class="pagination justify-content-center">
+                                                {% if tickets.has_previous %}
+                                                  <li class="page-item"><a class="page-link" style="z-index:0;" style="z-index:0;" href="?page={{ tickets.previous_page_number }}">Previous</a></li>
+                                                {% else %}
+                                                  <li class="page-item disabled"><a class="page-link" style="z-index:0;" href="#">Previous</a></li>
+                                                {% endif %}
+                                                {% for i in tickets.paginator.page_range %}
+                                                  {% if tickets.number == i %}
+                                                    <li class="page-item active"><a class="page-link" style="z-index:0;" href="#">{{ i }} <span class="sr-only">(current)</span></a></li>
+                                                  {% else %}
+                                                    <li class="page-item"><a class="page-link" style="z-index:0;" href="?page={{ i }}">{{ i }}</a></li>
+                                                  {% endif %}
+                                                {% endfor %}
+                                                {% if tickets.has_next %}
+                                                  <li class="page-item"><a class="page-link" style="z-index:0;" href="?page={{ tickets.next_page_number }}">Next</a></li>
+                                                {% else %}
+                                                  <li class="page-item disabled"><a class="page-link" style="z-index:0;" href="#">Next</a></li>
+                                                {% endif %}
+                                              </ul>
+                                            {% endif %}
+                                          </div>
+                                        </div>
+
+            </div>
+            <!-- END MAIN-->
+            <!-- COPYRIGHT-->
+            <section class="p-t-60 p-b-20">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="copyright">
+                                    <p>Copyright © 2018 Company. All rights reserved.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </section>
+            <!-- END COPYRIGHT-->
+        </div>
+        <!-- END PAGE CONTENT-->
+
+      </div>
+
+      <script src="{% static 'home/vendor/jquery-3.2.1.min.js' %}"></script>
+      <!-- Bootstrap JS-->
+      <script src="{% static 'home/vendor/bootstrap-4.1/popper.min.js' %}"></script>
+      <script src="{% static 'home/vendor/bootstrap-4.1/bootstrap.min.js' %}"></script>
+      <!-- Vendor JS       -->
+      <script src="{% static 'home/vendor/slick/slick.min.js' %}">
+      </script>
+      <script src="{% static 'home/vendor/wow/wow.min.js' %}"></script>
+      <script src="{% static 'home/vendor/animsition/animsition.min.js' %}"></script>
+      <script src="{% static 'home/vendor/bootstrap-progressbar/bootstrap-progressbar.min.js' %}">
+      </script>
+      <script src="{% static 'home/vendor/counter-up/jquery.waypoints.min.js' %}"></script>
+      <script src="{% static 'home/vendor/counter-up/jquery.counterup.min.js' %}">
+      </script>
+      <script src="{% static 'home/vendor/circle-progress/circle-progress.min.js' %}"></script>
+      <script src="{% static 'home/vendor/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
+      <script src="{% static 'home/vendor/chartjs/Chart.bundle.min.js' %}"></script>
+      <script src="{% static 'home/vendor/select2/select2.min.js' %}"></script>
+      <script src="{% static 'js/pop.js' %}"></script>
+      <!-- Main JS-->
+      <script src="{% static 'home/js/main.js' %}"></script>
+      <!-- end document-->
+      {% endblock %}
+      {% else %}
+      <meta http-equiv="REFRESH" content="0;url=/home">
+      {% endif %}
